@@ -1,0 +1,67 @@
+{
+  "recipes": [
+    {
+      "id": 1,
+      "profession": "炼丹",
+      "itemName": "筑基丹",
+      "quantity": 10,
+      "marketPrice": 5000,
+      "materials": [
+        { "name": "灵芝", "unitPrice": 50, "quantity": 10, "totalPrice": 500 },
+        { "name": "人参", "unitPrice": 80, "quantity": 10, "totalPrice": 800 },
+        { "name": "朱砂", "unitPrice": 120, "quantity": 10, "totalPrice": 1200 }
+      ],
+      "totalCost": 2500,
+      "totalRevenue": 50000,
+      "netProfit": 47500,
+      "savedAt": "2026-04-02T01:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "profession": "炼器",
+      "itemName": "青锋剑",
+      "quantity": 5,
+      "marketPrice": 8000,
+      "materials": [
+        { "name": "精铁", "unitPrice": 200, "quantity": 5, "totalPrice": 1000 },
+        { "name": "玄铁", "unitPrice": 500, "quantity": 5, "totalPrice": 2500 },
+        { "name": "剑鞘", "unitPrice": 100, "quantity": 5, "totalPrice": 500 }
+      ],
+      "totalCost": 4000,
+      "totalRevenue": 40000,
+      "netProfit": 36000,
+      "savedAt": "2026-04-02T01:35:00.000Z"
+    },
+    {
+      "id": 3,
+      "profession": "制符",
+      "itemName": "火符",
+      "quantity": 20,
+      "marketPrice": 800,
+      "materials": [
+        { "name": "黄纸", "unitPrice": 20, "quantity": 20, "totalPrice": 400 },
+        { "name": "朱砂", "unitPrice": 120, "quantity": 20, "totalPrice": 2400 },
+        { "name": "火灵石", "unitPrice": 200, "quantity": 20, "totalPrice": 4000 }
+      ],
+      "totalCost": 6800,
+      "totalRevenue": 16000,
+      "netProfit": 9200,
+      "savedAt": "2026-04-02T01:40:00.000Z"
+    }
+  ],
+  "inventory": {
+    "灵芝": { "name": "灵芝", "unitPrice": 50, "quantity": 15, "lastUsed": "2026-04-02T01:30:00.000Z" },
+    "人参": { "name": "人参", "unitPrice": 80, "quantity": 12, "lastUsed": "2026-04-02T01:30:00.000Z" },
+    "朱砂": { "name": "朱砂", "unitPrice": 120, "quantity": 30, "lastUsed": "2026-04-02T01:40:00.000Z" },
+    "精铁": { "name": "精铁", "unitPrice": 200, "quantity": 8, "lastUsed": "2026-04-02T01:35:00.000Z" },
+    "玄铁": { "name": "玄铁", "unitPrice": 500, "quantity": 6, "lastUsed": "2026-04-02T01:35:00.000Z" },
+    "剑鞘": { "name": "剑鞘", "unitPrice": 100, "quantity": 10, "lastUsed": "2026-04-02T01:35:00.000Z" },
+    "黄纸": { "name": "黄纸", "unitPrice": 20, "quantity": 25, "lastUsed": "2026-04-02T01:40:00.000Z" },
+    "火灵石": { "name": "火灵石", "unitPrice": 200, "quantity": 18, "lastUsed": "2026-04-02T01:40:00.000Z" },
+    "薄荷": { "name": "薄荷", "unitPrice": 30, "quantity": 20, "lastUsed": "2026-04-01T23:00:00.000Z" },
+    "甘草": { "name": "甘草", "unitPrice": 40, "quantity": 22, "lastUsed": "2026-04-01T23:00:00.000Z" }
+  },
+  "exportDate": "2026-04-02T01:50:00.000Z",
+  "version": "1.0",
+  "description": "诛仙世界副职业成本计算器示例数据，包含三个配方和十种材料库存。"
+}

@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>诛仙世界副职业成本计算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.3);
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+        }
+        
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+        
+        /* 左侧材料价格面板 */
+        .materials-panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .materials-panel h2 {
+            color: #e94560;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #e94560;
+            padding-bottom: 10px;
+        }
+        
+        .material-category {
+            margin-bottom: 15px;
+        }
+        
+        .material-category h3 {
+            color: #ffd700;
+            font-size: 0.95em;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        .material-category h3:hover {
+            background: rgba(255,215,0,0.2);
+        }
+        
+        .material-category h3::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s;
+        }
+        
+        .material-category h3.collapsed::after {
+            transform: rotate(-90deg);
+        }
+        
+        .material-category .category-content {
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s;
+            opacity: 1;
+        }
+        
+        .material-category h3.collapsed + .category-content {
+            max-height: 0;
+            opacity: 0;
+        }
+        
+        .material-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .material-item:hover {
+            background: rgba(255,255,255,0.08);
+        }
+        
+        .material-name {
+            flex: 1;
+            font-size: 0.85em;
+        }
+        
+        .material-input {
+            width: 80px;
+            padding: 5px 8px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            text-align: right;
+        }
+        
+        .material-input:focus {
+            outline: none;
+            border-color: #e94560;
+        }
+        
+        .price-history {
+            font-size: 0.7em;
+            color: #888;
+            margin-left: 5px;
+        }
+        
+        /* 右侧主要内容区 */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        /* 职业选择标签 */
+        .profession-tabs {
+            display: flex;
+            gap: 10px;
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .profession-tab {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: rgba(255,255,255,0.1);
+            color: #ccc;
+        }
+        
+        .profession-tab:hover {
+            transform: translateY(-2px);
+        }
+        
+        .profession-tab.active {
+            background: linear-gradient(135deg, #e94560, #ff6b6b);
+            color: #fff;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+        
+        /* 排行榜 */
+        .ranking-panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .ranking-panel h2 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ranking-panel h2::before {
+            content: "🏆";
+        }
+        
+        .ranking-list {
+            display: grid;
+            gap: 10px;
+        }
+        
+        .ranking-item {
+            display: grid;
+            grid-template-columns: 40px 1fr 100px 100px 120px;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .ranking-item:hover {
+            background: rgba(0,0,0,0.3);
+            transform: translateX(5px);
+        }
+        
+        .ranking-item.top1 { border-left: 4px solid #ffd700; }
+        .ranking-item.top2 { border-left: 4px solid #c0c0c0; }
+        .ranking-item.top3 { border-left: 4px solid #cd7f32; }
+        
+        .rank-number {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .rank-name {
+            font-weight: bold;
+        }
+        
+        .rank-profit {
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        .rank-yuanqi {
+            color: #60a5fa;
+        }
+        
+        .rank-yuanqi-profit {
+            color: #f472b6;
+            font-weight: bold;
+        }
+        
+        /* 配方详情区 */
+        .recipes-panel {
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .category-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .category-tab {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            color: #ccc;
+            transition: all 0.3s;
+        }
+        
+        .category-tab.active {
+            background: #e94560;
+            color: #fff;
+        }
+        
+        .recipes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 15px;
+        }
+        
+        .recipe-card {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+        }
+        
+        .recipe-card:hover {
+            border-color: #e94560;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(233, 69, 96, 0.2);
+        }
+        
+        .recipe-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .recipe-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .recipe-level {
+            background: #e94560;
+            color: #fff;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+        
+        .recipe-info {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 10px;
+            font-size: 0.85em;
+            color: #888;
+        }
+        
+        .recipe-materials {
+            margin-bottom: 10px;
+        }
+        
+        .material-tag {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+        
+        .recipe-calc {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .calc-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85em;
+        }
+        
+        .calc-label {
+            color: #888;
+        }
+        
+        .calc-value {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .calc-value.profit {
+            color: #4ade80;
+        }
+        
+        .calc-value.loss {
+            color: #ef4444;
+        }
+        
+        .sell-price-input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+        }
+        
+        .yuanqi-profit {
+            text-align: center;
+            padding: 8px;
+            margin-top: 10px;
+            background: rgba(233, 69, 96, 0.2);
+            border-radius: 5px;
+            font-weight: bold;
+            color: #f472b6;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .ranking-item {
+                grid-template-columns: 30px 1fr 80px 80px;
+                font-size: 0.85em;
+            }
+            
+            .rank-yuanqi-profit {
+                display: none;
+            }
+        }
+        
+        /* 滚动条美化 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #e94560;
+            border-radius: 4px;
+        }
+        
+        /* 提示信息 */
+        .tips {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+        
+        .tips strong {
+            color: #ffd700;
+        }
+        
+        /* 全局统计 */
+        .global-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e94560;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏔️ 诛仙世界副职业成本计算器</h1>
+            <p>智能计算成本、利润、元气收益，助你成为修仙界首富</p>
+        </header>
+        
+        <div class="tips">
+            <strong>💡 使用说明：</strong>
+            1. 在左侧输入材料价格（会自动保存最近3次记录）
+            2. 选择副职业和产物分类
+            3. 输入交易行售价，自动计算利润和元气收益
+            4. 查看元气收益排行榜，找出最赚钱的配方
+        </div>
+        
+        <div class="main-layout">
+            <!-- 左侧材料价格面板 -->
+            <aside class="materials-panel">
+                <h2>💎 材料价格设置</h2>
+                
+                <div class="material-category">
+                    <h3>⛏️ 矿石类</h3>
+                    <div class="category-content" id="basic-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>🌿 灵草类</h3>
+                    <div class="category-content" id="herb-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>✨ 精髓类</h3>
+                    <div class="category-content" id="essence-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>🦪 海鲜贝壳类</h3>
+                    <div class="category-content" id="seafood-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>🍳 食材类</h3>
+                    <div class="category-content" id="food-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>🌳 其他采集材料</h3>
+                    <div class="category-content" id="other-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>🔬 精炼材料</h3>
+                    <div class="category-content" id="refined-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>🧵 革类材料</h3>
+                    <div class="category-content" id="leather-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>💧 髓类材料</h3>
+                    <div class="category-content" id="marrow-materials"></div>
+                </div>
+                
+                <div class="material-category">
+                    <h3>💎 晶石类材料</h3>
+                    <div class="category-content" id="crystal-materials"></div>
+                </div>
+            </aside>
+            
+            <!-- 右侧主要内容 -->
+            <main class="main-content">
+                <!-- 全局统计 -->
+                <div class="global-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-materials">0</div>
+                        <div class="stat-label">已设置材料</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-recipes">0</div>
+                        <div class="stat-label">配方总数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="profitable-count">0</div>
+                        <div class="stat-label">可盈利配方</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="best-yuanqi">0</div>
+                        <div class="stat-label">最高元气收益</div>
+                    </div>
+                </div>
+                
+                <!-- 职业选择 -->
+                <div class="profession-tabs">
+                    <button class="profession-tab active" data-prof="forging">🔨 锻造</button>
+                    <button class="profession-tab" data-prof="tailoring">🧵 缝纫</button>
+                    <button class="profession-tab" data-prof="alchemy">⚗️ 炼药</button>
+                    <button class="profession-tab" data-prof="cooking">🍳 烹饪</button>
+                    <button class="profession-tab" data-prof="carving">✂️ 雕刻</button>
+                </div>
+                
+                <!-- 元气收益排行榜 -->
+                <div class="ranking-panel">
+                    <h2>元气收益排行榜（每点元气收益）</h2>
+                    <div class="ranking-list" id="ranking-list">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+                
+                <!-- 配方详情 -->
+                <div class="recipes-panel">
+                    <div class="category-tabs" id="category-tabs">
+                        <!-- 动态生成 -->
+                    </div>
+                    <div class="recipes-grid" id="recipes-grid">
+                        <!-- 动态生成 -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 数据定义 ====================
+        
+        // 基础采集材料（直接从游戏获得，不需要产出物）
+        const basicMaterials = [
+            // 矿石类
+            '黄铜矿', '雷磄砖', '雄黄霜', '玛瑙沙', '点翠晶', '绯云石',
+            // 灵草类
+            '无条茧', '苦辛叶', '都夷露', '半边莲尖', '九穗花', '灯芯枝',
+            // 精髓类
+            '良之精髓', '珍之精髓', '灵之精髓',
+            // 海鲜贝壳类
+            '蚌壳', '珍珠', '海藻',
+            // 食材类
+            '百味鸭肉', '蕴灵果蔬', '知秋鸡肉', '灵尾虾', '点睛豆脂', '云纹鸽肉', 
+            '醉仙猪肉', '清气灵粉', '踏焰羊肉', '千心粉', '负山牛肉', '镜花蜜',
+            // 其他采集材料
+            '枯荣枝', '玄芝叶', '玄芝根', '玄脉晶', '玄脉髓'
+        ];
+        
+        // 生产材料（不再显示，但计算时需要识别）
+        const productionMaterials = [
+            '月华露', '灵耀精华', '布料', '千心粉', '镜花蜜', '清气灵粉'
+        ];
+        
+        // 合成材料（髓/革/晶石类，不再显示）
+        const synthesisMaterials = [
+            // 锻造/雕刻共用髓类
+            '黄铜髓', '雷磄髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓',
+            // 缝纫革类
+            '无条革', '苦辛革', '都夷革', '半莲革', '九穗革', '灯芯革',
+            // 雕刻晶石类
+            '黄铜晶石', '雷磄晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'
+        ];
+        
+        // 灵草精/晶石精（炼药，不再显示）
+        const refinedMaterials = [
+            '无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精',
+            '黄铜晶石·精', '雷磄晶石·精', '雄黄晶石·精', '玛瑙晶石·精', '点翠晶石·精', '绯云晶石·精'
+        ];
+        
+        // 所有材料价格存储
+        let materialPrices = {};
+        let materialPriceHistory = {};
+        
+        // 配方数据
+        const recipesData = {
+            forging: {
+                name: '锻造',
+                categories: {
+                    consumable: { name: '消耗品', items: [
+                        { name: '庚金石', level: 15, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '玛瑙沙': 2 } },
+                        { name: '庚金石(绑)', level: 15, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '玛瑙沙': 2 } },
+                        { name: '刃芒石', level: 20, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠晶': 1, '珍珠': 2 } },
+                        { name: '刃芒石(绑)', level: 20, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠晶': 1, '珍珠': 2 } },
+                        { name: '流星石', level: 25, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云石': 1, '玄脉晶': 2 } },
+                        { name: '流星石(绑)', level: 25, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云石': 1, '玄脉晶': 2 } }
+                    ]},
+                    material: { name: '材料', items: [
+                        { name: '黄铜髓', level: 1, output: 1, yuanqi: 100, materials: { '黄铜矿': 5 } },
+                        { name: '雷磄髓', level: 5, output: 1, yuanqi: 100, materials: { '雷磄砖': 5 } },
+                        { name: '雄黄髓', level: 10, output: 1, yuanqi: 100, materials: { '雄黄霜': 5 } },
+                        { name: '玛瑙髓', level: 15, output: 1, yuanqi: 100, materials: { '玛瑙沙': 10, '珍珠': 1, '蚌壳': 2 } },
+                        { name: '点翠髓', level: 20, output: 1, yuanqi: 100, materials: { '点翠晶': 15, '珍珠': 1, '蚌壳': 2 } },
+                        { name: '绯云髓', level: 25, output: 1, yuanqi: 100, materials: { '绯云石': 20, '珍珠': 1, '蚌壳': 2 } }
+                    ]},
+                    infusion: { name: '灌注符', items: [
+                        { name: '百川符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙髓': 1, '半莲革': 1, '良之精髓': 20 } },
+                        { name: '万载百川符', level: 20, output: 2, yuanqi: 200, materials: { '点翠髓': 1, '九穗革': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '归墟百川符', level: 25, output: 2, yuanqi: 200, materials: { '绯云髓': 1, '灯芯革': 1, '玄脉晶': 2, '灵之精髓': 40 } }
+                    ]},
+                    special: { name: '特殊', items: [
+                        { name: '青帝斫生刃', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '玄脉晶': 4, '绯云石': 60 } }
+                    ]}
+                }
+            },
+            tailoring: {
+                name: '缝纫',
+                categories: {
+                    material: { name: '材料', items: [
+                        { name: '无条革', level: 1, output: 1, yuanqi: 100, materials: { '无条茧': 5 } },
+                        { name: '苦辛革', level: 5, output: 1, yuanqi: 100, materials: { '苦辛叶': 5 } },
+                        { name: '都夷革', level: 10, output: 1, yuanqi: 100, materials: { '都夷露': 5 } },
+                        { name: '半莲革', level: 15, output: 1, yuanqi: 100, materials: { '半边莲尖': 10, '珍珠': 2, '海藻': 1 } },
+                        { name: '九穗革', level: 20, output: 1, yuanqi: 100, materials: { '九穗花': 15, '珍珠': 2, '海藻': 1 } },
+                        { name: '灯芯革', level: 25, output: 1, yuanqi: 100, materials: { '灯芯枝': 20, '珍珠': 2, '海藻': 1 } }
+                    ]},
+                    consumable: { name: '消耗品', items: [
+                        { name: '云纹片', level: 15, output: 2, yuanqi: 200, materials: { '良之精髓': 10, '半莲革': 1, '半边莲尖·精': 1 } },
+                        { name: '云纹片(绑)', level: 15, output: 3, yuanqi: 200, materials: { '良之精髓': 10, '半莲革': 1, '半边莲尖·精': 1 } },
+                        { name: '玄武片', level: 20, output: 2, yuanqi: 200, materials: { '珍之精髓': 10, '九穗革': 1, '九穗花·精': 1, '玄芝叶': 2 } },
+                        { name: '玄武片(绑)', level: 20, output: 3, yuanqi: 200, materials: { '珍之精髓': 10, '九穗革': 1, '九穗花·精': 1, '玄芝叶': 2 } },
+                        { name: '镇岳片', level: 25, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '灯芯革': 1, '灯芯枝·精': 1, '玄芝根': 2 } },
+                        { name: '镇岳片(绑)', level: 25, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '灯芯革': 1, '灯芯枝·精': 1, '玄芝根': 2 } }
+                    ]},
+                    infusion: { name: '灌注符', items: [
+                        { name: '神凰符', level: 15, output: 2, yuanqi: 200, materials: { '半莲革': 1, '玛瑙晶石': 1, '良之精髓': 20 } },
+                        { name: '万载神凰符', level: 20, output: 2, yuanqi: 200, materials: { '九穗革': 1, '点翠晶石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '归墟神凰符', level: 25, output: 2, yuanqi: 200, materials: { '灯芯革': 1, '绯云晶石': 1, '玄脉晶': 2, '灵之精髓': 40 } }
+                    ]},
+                    special: { name: '特殊', items: [
+                        { name: '百草还生幔', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '玄芝根': 4, '灯芯枝': 60 } },
+                        { name: '缝纫之灵耀', level: 25, output: 1, yuanqi: 100, materials: { '灯芯革': 1, '灵之精髓': 25, '玄芝根': 2, '月华露': 3, '灵耀精华': 1 } }
+                    ]}
+                }
+            },
+            alchemy: {
+                name: '炼药',
+                categories: {
+                    pill: { name: '丹药', items: [
+                        { name: '造化丹', level: 1, output: 2, yuanqi: 100, materials: { '无条茧·精': 1 } },
+                        { name: '甘露丸', level: 5, output: 2, yuanqi: 100, materials: { '苦辛叶·精': 1 } },
+                        { name: '真元丹', level: 10, output: 2, yuanqi: 100, materials: { '都夷露·精': 1 } },
+                        { name: '同寿丸', level: 15, output: 2, yuanqi: 100, materials: { '半边莲尖·精': 1, '玄芝叶': 1 } },
+                        { name: '灵犀丸', level: 15, output: 2, yuanqi: 200, materials: { '半边莲尖·精': 1, '半莲革': 1, '玄芝叶': 1 } },
+                        { name: '回气丸', level: 15, output: 2, yuanqi: 200, materials: { '半边莲尖·精': 1, '半莲革': 1, '玄芝叶': 1 } },
+                        { name: '拓脉丸', level: 15, output: 2, yuanqi: 200, materials: { '半边莲尖·精': 1, '玛瑙晶石': 1, '玄芝叶': 1 } },
+                        { name: '透骨丸', level: 15, output: 2, yuanqi: 200, materials: { '半边莲尖·精': 1, '玛瑙晶石': 1, '玄芝叶': 1 } },
+                        { name: '天河玉露', level: 20, output: 2, yuanqi: 100, materials: { '九穗花·精': 1, '玄芝叶': 2 } },
+                        { name: '破妄丸', level: 20, output: 2, yuanqi: 200, materials: { '九穗花·精': 1, '九穗革': 1, '玄芝叶': 2 } },
+                        { name: '芳华丸', level: 20, output: 2, yuanqi: 200, materials: { '九穗花·精': 1, '九穗革': 1, '玄芝叶': 2 } },
+                        { name: '神通丸', level: 20, output: 2, yuanqi: 200, materials: { '九穗花·精': 1, '点翠晶石': 1, '玄芝叶': 2 } },
+                        { name: '破气丸', level: 20, output: 2, yuanqi: 200, materials: { '九穗花·精': 1, '点翠晶石': 1, '玄芝叶': 2 } },
+                        { name: '乙木长生液', level: 25, output: 2, yuanqi: 100, materials: { '灯芯枝·精': 1, '玄芝根': 2 } },
+                        { name: '天机丸', level: 25, output: 2, yuanqi: 200, materials: { '灯芯枝·精': 1, '灯芯革': 1, '玄芝根': 2 } },
+                        { name: '时溯丸', level: 25, output: 2, yuanqi: 200, materials: { '灯芯枝·精': 1, '灯芯革': 1, '玄芝根': 2 } },
+                        { name: '共鸣丸', level: 25, output: 2, yuanqi: 200, materials: { '灯芯枝·精': 1, '绯云晶石': 1, '玄芝根': 2 } },
+                        { name: '道蚀丸', level: 25, output: 2, yuanqi: 200, materials: { '灯芯枝·精': 1, '绯云晶石': 1, '玄芝根': 2 } },
+                        { name: '五气朝元丸(绑)', level: 25, output: 4, yuanqi: 200, materials: { '灯芯枝·精': 1, '灯芯革': 1, '玄芝根': 2, '绯云髓': 1 } }
+                    ]},
+                    elixir: { name: '灵药', items: [
+                        { name: '凤血丹', level: 15, output: 2, yuanqi: 150, materials: { '半边莲尖·精': 1, '玛瑙髓': 1, '玄芝叶': 1 } },
+                        { name: '焚身丹', level: 20, output: 2, yuanqi: 150, materials: { '九穗花·精': 1, '点翠髓': 1, '玄芝叶': 1 } },
+                        { name: '真龙丹', level: 25, output: 2, yuanqi: 150, materials: { '灯芯枝·精': 1, '绯云髓': 1, '玄芝根': 1 } }
+                    ]},
+                    material: { name: '材料', items: [
+                        { name: '无条茧·精', level: 1, output: 1, yuanqi: 100, materials: { '无条茧': 5 } },
+                        { name: '苦辛叶·精', level: 5, output: 1, yuanqi: 100, materials: { '苦辛叶': 5 } },
+                        { name: '都夷露·精', level: 10, output: 1, yuanqi: 100, materials: { '都夷露': 5 } },
+                        { name: '半边莲尖·精', level: 15, output: 1, yuanqi: 100, materials: { '半边莲尖': 10, '珍珠': 1, '海藻': 1 } },
+                        { name: '九穗花·精', level: 20, output: 1, yuanqi: 100, materials: { '九穗花': 15, '珍珠': 1, '海藻': 1 } },
+                        { name: '灯芯枝·精', level: 25, output: 1, yuanqi: 100, materials: { '灯芯枝': 20, '珍珠': 1, '海藻': 1 } }
+                    ]},
+                    special: { name: '特殊', items: [
+                        { name: '五行通明印', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '玄脉晶': 4, '绯云石': 60 } },
+                        { name: '般若生息散', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '玄脉晶': 4, '绯云石': 60 } }
+                    ]}
+                }
+            },
+            cooking: {
+                name: '烹饪',
+                categories: {
+                    cooking: { name: '烹饪', items: [
+                        { name: '青鸾暖心煲', level: 1, output: 2, yuanqi: 120, materials: { '知秋鸡肉': 6 } },
+                        { name: '浮生蔬', level: 5, output: 2, yuanqi: 120, materials: { '蕴灵果蔬': 6 } },
+                        { name: '金乌坠玉盘', level: 10, output: 2, yuanqi: 120, materials: { '百味鸭肉': 6 } },
+                        { name: '饕餮虾', level: 15, output: 2, yuanqi: 120, materials: { '灵尾虾': 6 } },
+                        { name: '轮回五味锅', level: 15, output: 2, yuanqi: 120, materials: { '灵尾虾': 3, '点睛豆脂': 3 } },
+                        { name: '业火红莲丁', level: 15, output: 2, yuanqi: 120, materials: { '点睛豆脂': 3, '知秋鸡肉': 3 } },
+                        { name: '通明蔬', level: 15, output: 2, yuanqi: 120, materials: { '灵尾虾': 3, '知秋鸡肉': 3 } },
+                        { name: '青帝回春卷', level: 15, output: 2, yuanqi: 120, materials: { '灵尾虾': 2, '点睛豆脂': 2, '知秋鸡肉': 2 } },
+                        { name: '羲和驭日丸', level: 20, output: 2, yuanqi: 120, materials: { '醉仙猪肉': 6 } },
+                        { name: '四海扣肉', level: 20, output: 2, yuanqi: 120, materials: { '醉仙猪肉': 3, '清气灵粉': 3 } },
+                        { name: '天雷淬骨炖', level: 20, output: 2, yuanqi: 120, materials: { '清气灵粉': 3, '踏焰羊肉': 3 } },
+                        { name: '乾坤包', level: 20, output: 2, yuanqi: 120, materials: { '醉仙猪肉': 3, '踏焰羊肉': 3 } },
+                        { name: '龙息椒香串', level: 20, output: 2, yuanqi: 120, materials: { '醉仙猪肉': 2, '清气灵粉': 2, '踏焰羊肉': 2 } },
+                        { name: '黄粱梦枕糕', level: 25, output: 2, yuanqi: 120, materials: { '千心粉': 6, '灵之精髓': 10 } },
+                        { name: '玲珑蕴宝肉', level: 25, output: 2, yuanqi: 120, materials: { '千心粉': 3, '醉仙猪肉': 3, '灵之精髓': 10 } },
+                        { name: '须弥面', level: 25, output: 2, yuanqi: 120, materials: { '醉仙猪肉': 3, '镜花蜜': 3, '灵之精髓': 10 } },
+                        { name: '望舒御月羹', level: 25, output: 2, yuanqi: 120, materials: { '千心粉': 3, '镜花蜜': 3, '灵之精髓': 10 } },
+                        { name: '神工卷', level: 25, output: 2, yuanqi: 120, materials: { '千心粉': 2, '醉仙猪肉': 2, '镜花蜜': 2, '灵之精髓': 10 } }
+                    ]},
+                    material: { name: '材料', items: [
+                        { name: '清气灵粉', level: 20, output: 1, yuanqi: 100, materials: { '半边莲尖': 10, '珍珠': 2 } }
+                    ]},
+                    special: { name: '特殊', items: [
+                        { name: '百花清心露', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '镜花蜜': 6, '清气灵粉': 6 } }
+                    ]}
+                }
+            },
+            carving: {
+                name: '雕刻',
+                categories: {
+                    consumable: { name: '消耗品', items: [
+                        { name: '虹光魄', level: 15, output: 2, yuanqi: 200, materials: { '良之精髓': 10, '玛瑙髓': 1, '玛瑙晶石': 1 } },
+                        { name: '虹光魄(绑)', level: 15, output: 3, yuanqi: 200, materials: { '良之精髓': 10, '玛瑙髓': 1, '玛瑙晶石': 1 } },
+                        { name: '灵晶魄', level: 20, output: 2, yuanqi: 200, materials: { '珍之精髓': 10, '点翠髓': 1, '点翠晶石': 1, '玄脉髓': 2 } },
+                        { name: '灵晶魄(绑)', level: 20, output: 3, yuanqi: 200, materials: { '珍之精髓': 10, '点翠髓': 1, '点翠晶石': 1, '玄脉髓': 2 } },
+                        { name: '仙灵魄', level: 25, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云晶石': 1, '玄脉晶': 2 } },
+                        { name: '仙灵魄(绑)', level: 25, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云晶石': 1, '玄脉晶': 2 } }
+                    ]},
+                    material: { name: '材料', items: [
+                        { name: '黄铜晶石', level: 1, output: 1, yuanqi: 100, materials: { '黄铜矿': 5 } },
+                        { name: '雷磄晶石', level: 5, output: 1, yuanqi: 100, materials: { '雷磄砖': 5 } },
+                        { name: '雄黄晶石', level: 10, output: 1, yuanqi: 100, materials: { '雄黄霜': 5 } },
+                        { name: '玛瑙晶石', level: 15, output: 1, yuanqi: 100, materials: { '玛瑙沙': 10, '珍珠': 1, '海藻': 2 } },
+                        { name: '点翠晶石', level: 20, output: 1, yuanqi: 100, materials: { '点翠晶': 15, '珍珠': 1, '海藻': 2 } },
+                        { name: '绯云晶石', level: 25, output: 1, yuanqi: 100, materials: { '绯云石': 20, '珍珠': 1, '海藻': 2 } }
+                    ]},
+                    infusion: { name: '灌注符', items: [
+                        // 15级 - 基础版
+                        { name: '惊芒符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        { name: '运转符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        { name: '大衍符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        { name: '摧岳符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        { name: '金身符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        { name: '蚀骨符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        // 20级 - 万载版
+                        { name: '万载惊芒符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载运转符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载大衍符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载摧岳符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载金身符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载蚀骨符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        // 25级 - 归墟版
+                        { name: '归墟惊芒符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟运转符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟大衍符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟摧岳符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟金身符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟蚀骨符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } }
+                    ]},
+                    special: { name: '特殊', items: [
+                        { name: '五行通明印', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '玄脉晶': 4, '绯云石': 60 } }
+                    ]}
+                }
+            }
+        };
+        
+        // 当前选中的职业和分类
+        let currentProfession = 'forging';
+        let currentCategory = 'consumable';
+        
+        // ==================== 初始化 ====================
+        
+        function init() {
+            loadPrices();
+            renderMaterialsPanel();
+            renderProfessionTabs();
+            renderCategoryTabs();
+            renderRecipes();
+            updateRanking();
+            updateGlobalStats();
+        }
+        
+        // ==================== 价格管理 ====================
+        
+        function loadPrices() {
+            const saved = localStorage.getItem('zhuxian_material_prices');
+            const savedHistory = localStorage.getItem('zhuxian_price_history');
+            if (saved) {
+                materialPrices = JSON.parse(saved);
+            }
+            if (savedHistory) {
+                materialPriceHistory = JSON.parse(savedHistory);
+            }
+        }
+        
+        function savePrices() {
+            localStorage.setItem('zhuxian_material_prices', JSON.stringify(materialPrices));
+            localStorage.setItem('zhuxian_price_history', JSON.stringify(materialPriceHistory));
+        }
+        
+        function updateMaterialPrice(material, price) {
+            price = parseFloat(price) || 0;
+            
+            // 保存历史记录
+            if (!materialPriceHistory[material]) {
+                materialPriceHistory[material] = [];
+            }
+            if (price > 0) {
+                materialPriceHistory[material].unshift(price);
+                if (materialPriceHistory[material].length > 3) {
+                    materialPriceHistory[material].pop();
+                }
+            }
+            
+            materialPrices[material] = price;
+            savePrices();
+            updateRanking();
+            updateGlobalStats();
+            renderRecipes();
+        }
+        
+        function getMaterialPrice(material) {
+            return materialPrices[material] || 0;
+        }
+        
+        // ==================== 成本计算 ====================
+        
+        // 计算材料的总成本（自动计算生产材料的成本）
+        function calculateCost(materials) {
+            let cost = 0;
+            for (const [material, count] of Object.entries(materials)) {
+                const materialCost = getMaterialCost(material);
+                cost += materialCost * count;
+            }
+            return cost;
+        }
+        
+        // 获取单个材料的成本（包括生产材料的自动计算）
+        function getMaterialCost(material) {
+            // 如果材料已经在基础材料列表中，直接返回价格
+            if (basicMaterials.includes(material)) {
+                return getMaterialPrice(material) || 0;
+            }
+            
+            // 如果是生产材料，根据配方计算成本
+            const productionCost = calculateProductionCost(material);
+            if (productionCost > 0) {
+                return productionCost;
+            }
+            
+            // 否则返回直接价格
+            return getMaterialPrice(material) || 0;
+        }
+        
+        // 计算生产材料的成本
+        function calculateProductionCost(material) {
+            // 材料配方数据
+            const productionRecipes = {
+                // 锻造材料
+                '黄铜髓': { materials: { '黄铜矿': 5 } },
+                '雷磄髓': { materials: { '雷磄砖': 5 } },
+                '雄黄髓': { materials: { '雄黄霜': 5 } },
+                '玛瑙髓': { materials: { '玛瑙沙': 10, '珍珠': 1, '蚌壳': 2 } },
+                '点翠髓': { materials: { '点翠晶': 15, '珍珠': 1, '蚌壳': 2 } },
+                '绯云髓': { materials: { '绯云石': 20, '珍珠': 1, '蚌壳': 2 } },
+                // 缝纫材料
+                '无条革': { materials: { '无条茧': 5 } },
+                '苦辛革': { materials: { '苦辛叶': 5 } },
+                '都夷革': { materials: { '都夷露': 5 } },
+                '半莲革': { materials: { '半边莲尖': 10, '珍珠': 2, '海藻': 1 } },
+                '九穗革': { materials: { '九穗花': 15, '珍珠': 2, '海藻': 1 } },
+                '灯芯革': { materials: { '灯芯枝': 20, '珍珠': 2, '海藻': 1 } },
+                // 雕刻材料
+                '黄铜晶石': { materials: { '黄铜矿': 5 } },
+                '雷磄晶石': { materials: { '雷磄砖': 5 } },
+                '雄黄晶石': { materials: { '雄黄霜': 5 } },
+                '玛瑙晶石': { materials: { '玛瑙沙': 10, '珍珠': 1, '海藻': 2 } },
+                '点翠晶石': { materials: { '点翠晶': 15, '珍珠': 1, '海藻': 2 } },
+                '绯云晶石': { materials: { '绯云石': 20, '珍珠': 1, '海藻': 2 } },
+                // 灵草精（炼药）
+                '无条茧·精': { materials: { '无条茧': 10 } },
+                '苦辛叶·精': { materials: { '苦辛叶': 10 } },
+                '都夷露·精': { materials: { '都夷露': 10 } },
+                '半边莲尖·精': { materials: { '半边莲尖': 10 } },
+                '九穗花·精': { materials: { '九穗花': 10 } },
+                '灯芯枝·精': { materials: { '灯芯枝': 10 } },
+                // 晶石精（炼药）
+                '黄铜晶石·精': { materials: { '黄铜矿': 10 } },
+                '雷磄晶石·精': { materials: { '雷磄砖': 10 } },
+                '雄黄晶石·精': { materials: { '雄黄霜': 10 } },
+                '玛瑙晶石·精': { materials: { '玛瑙沙': 10 } },
+                '点翠晶石·精': { materials: { '点翠晶': 10 } },
+                '绯云晶石·精': { materials: { '绯云石': 10 } },
+                // 烹饪材料
+                '千心粉': { materials: { '九穗花': 10, '珍珠': 2 } },
+                '镜花蜜': { materials: { '灯芯枝': 10, '珍珠': 2 } },
+                '清气灵粉': { materials: { '半边莲尖': 10, '珍珠': 2 } }
+            };
+            
+            if (productionRecipes[material]) {
+                let cost = 0;
+                for (const [mat, count] of Object.entries(productionRecipes[material].materials)) {
+                    cost += getMaterialCost(mat) * count;
+                }
+                return cost;
+            }
+            
+            return 0;
+        }
+        
+        function calculateProfit(sellPrice, cost, output) {
+            // 扣除5%交易行手续费
+            const actualRevenue = sellPrice * output * 0.95;
+            return actualRevenue - cost;
+        }
+        
+        function calculateYuanqiProfit(sellPrice, cost, output, yuanqi) {
+            if (yuanqi <= 0) return 0;
+            const profit = calculateProfit(sellPrice, cost, output);
+            return profit / yuanqi;
+        }
+        
+        // ==================== 渲染界面 ====================
+        
+        function renderMaterialsPanel() {
+            // 基础材料，按类别分组
+            const oreMaterials = ['黄铜矿', '雷磄砖', '雄黄霜', '玛瑙沙', '点翠晶', '绯云石'];
+            const herbMaterials = ['无条茧', '苦辛叶', '都夷露', '半边莲尖', '九穗花', '灯芯枝'];
+            const essenceMaterials = ['良之精髓', '珍之精髓', '灵之精髓'];
+            const seafoodMaterials = ['蚌壳', '珍珠', '海藻'];
+            const foodMaterials = [
+                '百味鸭肉', '蕴灵果蔬', '知秋鸡肉', '灵尾虾', '点睛豆脂', '云纹鸽肉',
+                '醉仙猪肉', '清气灵粉', '踏焰羊肉', '千心粉', '负山牛肉', '镜花蜜'
+            ];
+            const otherMaterials = ['枯荣枝', '玄芝叶', '玄芝根', '玄脉晶', '玄脉髓'];
+            
+            // 生产物材料
+            const refinedMaterials = ['无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精'];
+            const leatherMaterials = ['无条革', '苦辛革', '都夷革', '半莲革', '九穗革'];
+            const marrowMaterials = ['黄铜髓', '雷磄髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓'];
+            const crystalMaterials = ['黄铜晶石', '雷磄晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'];
+            
+            renderMaterialCategory('basic-materials', oreMaterials);
+            renderMaterialCategory('herb-materials', herbMaterials);
+            renderMaterialCategory('essence-materials', essenceMaterials);
+            renderMaterialCategory('seafood-materials', seafoodMaterials);
+            renderMaterialCategory('food-materials', foodMaterials);
+            renderMaterialCategory('other-materials', otherMaterials);
+            renderMaterialCategory('refined-materials', refinedMaterials);
+            renderMaterialCategory('leather-materials', leatherMaterials);
+            renderMaterialCategory('marrow-materials', marrowMaterials);
+            renderMaterialCategory('crystal-materials', crystalMaterials);
+            
+            // 添加折叠功能
+            initCollapse();
+        }
+        
+        function initCollapse() {
+            const categories = document.querySelectorAll('.material-category h3');
+            categories.forEach(header => {
+                header.addEventListener('click', () => {
+                    header.classList.toggle('collapsed');
+                });
+            });
+        }
+        
+        function renderMaterialCategory(containerId, materials) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = materials.map(material => {
+                const price = getMaterialPrice(material);
+                const history = (materialPriceHistory[material] || []).slice(1);
+                const historyText = history.length > 0 ? `(${history.join('→')})` : '';
+                
+                return `
+                    <div class="material-item">
+                        <span class="material-name">${material}</span>
+                        <input type="number" 
+                               class="material-input" 
+                               value="${price || ''}" 
+                               placeholder="0"
+                               onchange="updateMaterialPrice('${material}', this.value)">
+                        <span class="price-history">${historyText}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function renderProfessionTabs() {
+            const tabs = document.querySelectorAll('.profession-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentProfession = tab.dataset.prof;
+                    currentCategory = Object.keys(recipesData[currentProfession].categories)[0];
+                    renderCategoryTabs();
+                    renderRecipes();
+                    updateRanking();
+                });
+            });
+        }
+        
+        function renderCategoryTabs() {
+            const container = document.getElementById('category-tabs');
+            const categories = recipesData[currentProfession].categories;
+            
+            container.innerHTML = Object.entries(categories).map(([key, cat]) => `
+                <button class="category-tab ${key === currentCategory ? 'active' : ''}" 
+                        data-category="${key}">
+                    ${cat.name}
+                </button>
+            `).join('');
+            
+            container.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    currentCategory = tab.dataset.category;
+                    renderCategoryTabs();
+                    renderRecipes();
+                });
+            });
+        }
+        
+        function renderRecipes() {
+            const container = document.getElementById('recipes-grid');
+            const categories = recipesData[currentProfession].categories;
+            
+            // 收集所有配方用于排行榜
+            let allRecipes = [];
+            Object.entries(categories).forEach(([catKey, cat]) => {
+                cat.items.forEach(item => {
+                    allRecipes.push({ ...item, category: cat.name, categoryKey: catKey });
+                });
+            });
+            
+            // 只渲染当前分类
+            const currentItems = categories[currentCategory].items;
+            
+            container.innerHTML = currentItems.map(item => {
+                const cost = calculateCost(item.materials);
+                const sellPrice = getMaterialPrice(item.name + '_sell') || 0;
+                const profit = calculateProfit(sellPrice, cost, item.output);
+                const yuanqiProfit = calculateYuanqiProfit(sellPrice, cost, item.output, item.yuanqi);
+                
+                const materialsHtml = Object.entries(item.materials).map(([mat, count]) => {
+                    const matCost = getMaterialCost(mat);
+                    return `<span class="material-tag">${mat}×${count} ${matCost > 0 ? '(' + matCost.toFixed(0) + ')' : ''}</span>`;
+                }).join('');
+                
+                return `
+                    <div class="recipe-card">
+                        <div class="recipe-header">
+                            <span class="recipe-name">${item.name}</span>
+                            <span class="recipe-level">Lv.${item.level}</span>
+                        </div>
+                        <div class="recipe-info">
+                            <span>产出: ${item.output}个</span>
+                            <span>元气: ${item.yuanqi}</span>
+                        </div>
+                        <div class="recipe-materials">
+                            ${materialsHtml}
+                        </div>
+                        <input type="number" 
+                               class="sell-price-input" 
+                               placeholder="输入交易行售价"
+                               value="${sellPrice || ''}"
+                               onchange="updateSellPrice('${item.name}', this.value)">
+                        <div class="recipe-calc">
+                            <div class="calc-row">
+                                <span class="calc-label">成本:</span>
+                                <span class="calc-value">${cost.toFixed(0)}</span>
+                            </div>
+                            <div class="calc-row">
+                                <span class="calc-label">利润:</span>
+                                <span class="calc-value ${profit >= 0 ? 'profit' : 'loss'}">${profit >= 0 ? '+' : ''}${profit.toFixed(0)}</span>
+                            </div>
+                        </div>
+                        <div class="yuanqi-profit">
+                            每元气收益: ${yuanqiProfit.toFixed(2)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function updateSellPrice(itemName, price) {
+            materialPrices[itemName + '_sell'] = parseFloat(price) || 0;
+            savePrices();
+            renderRecipes();
+            updateRanking();
+            updateGlobalStats();
+        }
+        
+        // ==================== 排行榜 ====================
+        
+        function updateRanking() {
+            const container = document.getElementById('ranking-list');
+            
+            // 收集所有配方
+            let allRecipes = [];
+            Object.entries(recipesData).forEach(([profKey, prof]) => {
+                Object.entries(prof.categories).forEach(([catKey, cat]) => {
+                    cat.items.forEach(item => {
+                        const cost = calculateCost(item.materials);
+                        const sellPrice = getMaterialPrice(item.name + '_sell') || 0;
+                        const profit = calculateProfit(sellPrice, cost, item.output);
+                        const yuanqiProfit = calculateYuanqiProfit(sellPrice, cost, item.output, item.yuanqi);
+                        
+                        if (sellPrice > 0) {
+                            allRecipes.push({
+                                name: item.name,
+                                prof: prof.name,
+                                profit: profit,
+                                yuanqiProfit: yuanqiProfit,
+                                yuanqi: item.yuanqi,
+                                output: item.output
+                            });
+                        }
+                    });
+                });
+            });
+            
+            // 按元气收益排序
+            allRecipes.sort((a, b) => b.yuanqiProfit - a.yuanqiProfit);
+            
+            // 显示前20名
+            container.innerHTML = allRecipes.slice(0, 20).map((item, index) => {
+                const rankClass = index === 0 ? 'top1' : index === 1 ? 'top2' : index === 2 ? 'top3' : '';
+                return `
+                    <div class="ranking-item ${rankClass}">
+                        <span class="rank-number">${index + 1}</span>
+                        <span class="rank-name">${item.name} <small>(${item.prof})</small></span>
+                        <span class="rank-profit">${item.profit >= 0 ? '+' : ''}${item.profit.toFixed(0)}</span>
+                        <span class="rank-yuanqi">${item.yuanqi}元气</span>
+                        <span class="rank-yuanqi-profit">${item.yuanqiProfit.toFixed(2)}/元气</span>
+                    </div>
+                `;
+            }).join('');
+            
+            if (allRecipes.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:20px;color:#888;">请先输入交易行售价，才能显示排行榜</div>';
+            }
+        }
+        
+        // ==================== 全局统计 ====================
+        
+        function updateGlobalStats() {
+            // 已设置材料数
+            const setMaterials = Object.values(materialPrices).filter(p => p > 0 && !String(Object.keys(materialPrices).find(k => materialPrices[k] === p)).endsWith('_sell')).length;
+            document.getElementById('total-materials').textContent = setMaterials;
+            
+            // 配方总数
+            let totalRecipes = 0;
+            Object.values(recipesData).forEach(prof => {
+                Object.values(prof.categories).forEach(cat => {
+                    totalRecipes += cat.items.length;
+                });
+            });
+            document.getElementById('total-recipes').textContent = totalRecipes;
+            
+            // 可盈利配方数
+            let profitableCount = 0;
+            let bestYuanqi = 0;
+            Object.values(recipesData).forEach(prof => {
+                Object.values(prof.categories).forEach(cat => {
+                    cat.items.forEach(item => {
+                        const cost = calculateCost(item.materials);
+                        const sellPrice = getMaterialPrice(item.name + '_sell') || 0;
+                        const profit = calculateProfit(sellPrice, cost, item.output);
+                        const yuanqiProfit = calculateYuanqiProfit(sellPrice, cost, item.output, item.yuanqi);
+                        
+                        if (profit > 0) profitableCount++;
+                        if (yuanqiProfit > bestYuanqi) bestYuanqi = yuanqiProfit;
+                    });
+                });
+            });
+            document.getElementById('profitable-count').textContent = profitableCount;
+            document.getElementById('best-yuanqi').textContent = bestYuanqi.toFixed(1);
+        }
+        
+        // ==================== 启动 ====================
+        
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
