@@ -144,6 +144,57 @@
             font-size: 0.85em;
         }
         
+        /* 材料来源切换按钮 */
+        .source-toggle {
+            width: 32px;
+            height: 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 6px;
+            transition: all 0.2s;
+        }
+        
+        .source-toggle.craft {
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+        }
+        
+        .source-toggle.buy {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+        }
+        
+        .source-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* 髓类和晶石类分类标题提示 */
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .category-hint {
+            font-size: 0.75em;
+            color: #888;
+        }
+        
+        .category-hint .hint-craft {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .category-hint .hint-buy {
+            color: #ff9800;
+            font-weight: bold;
+        }
+        
         .material-input {
             width: 80px;
             padding: 5px 8px;
@@ -552,28 +603,40 @@
                 
                 <div class="material-category">
                     <div class="category-header" onclick="toggleCategory('refined-materials')">
-                        <h3>🔬 精炼材料 <span class="toggle-icon">▼</span></h3>
+                        <div>
+                            <h3>🔬 精炼材料 <span class="toggle-icon">▼</span></h3>
+                            <div class="category-hint">二级产物，可切换来源：<span class="hint-craft">自</span>制作/<span class="hint-buy">买</span>购买</div>
+                        </div>
                     </div>
                     <div class="category-content collapsed" id="refined-materials"></div>
                 </div>
                 
                 <div class="material-category">
                     <div class="category-header" onclick="toggleCategory('leather-materials')">
-                        <h3>🧵 革类材料 <span class="toggle-icon">▼</span></h3>
+                        <div>
+                            <h3>🧵 革类材料 <span class="toggle-icon">▼</span></h3>
+                            <div class="category-hint">二级产物，可切换来源：<span class="hint-craft">自</span>制作/<span class="hint-buy">买</span>购买</div>
+                        </div>
                     </div>
                     <div class="category-content collapsed" id="leather-materials"></div>
                 </div>
                 
                 <div class="material-category">
                     <div class="category-header" onclick="toggleCategory('marrow-materials')">
-                        <h3>💧 髓类材料 <span class="toggle-icon">▼</span></h3>
+                        <div>
+                            <h3>💧 髓类材料 <span class="toggle-icon">▼</span></h3>
+                            <div class="category-hint">二级产物，可切换来源：<span class="hint-craft">自</span>制作/<span class="hint-buy">买</span>购买</div>
+                        </div>
                     </div>
                     <div class="category-content collapsed" id="marrow-materials"></div>
                 </div>
                 
                 <div class="material-category">
                     <div class="category-header" onclick="toggleCategory('crystal-materials')">
-                        <h3>💎 晶石类材料 <span class="toggle-icon">▼</span></h3>
+                        <div>
+                            <h3>💎 晶石类材料 <span class="toggle-icon">▼</span></h3>
+                            <div class="category-hint">二级产物，可切换来源：<span class="hint-craft">自</span>制作/<span class="hint-buy">买</span>购买</div>
+                        </div>
                     </div>
                     <div class="category-content collapsed" id="crystal-materials"></div>
                 </div>
@@ -785,7 +848,7 @@
         // 基础采集材料（直接从游戏获得，不需要产出物）
         const basicMaterials = [
             // 矿石类
-            '黄铜矿', '雷磄砖', '雄黄霜', '玛瑙沙', '点翠晶', '绯云石',
+            '黄铜矿', '雷碣砖', '雄黄霜', '玛瑙沙', '点翠石', '绯云石',
             // 灵草类
             '无条茧', '苦辛叶', '都夷露', '半边莲尖', '九穗花', '灯芯枝',
             // 精髓类
@@ -807,22 +870,43 @@
         // 合成材料（髓/革/晶石类，不再显示）
         const synthesisMaterials = [
             // 锻造/雕刻共用髓类
-            '黄铜髓', '雷磄髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓',
+            '黄铜髓', '雷碣髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓',
             // 缝纫革类
             '无条革', '苦辛革', '都夷革', '半莲革', '九穗革', '灯芯革',
             // 雕刻晶石类
-            '黄铜晶石', '雷磄晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'
+            '黄铜晶石', '雷碣晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'
         ];
         
         // 灵草精/晶石精（炼药，不再显示）
         const refinedMaterials = [
-            '无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精',
-            '黄铜晶石·精', '雷磄晶石·精', '雄黄晶石·精', '玛瑙晶石·精', '点翠晶石·精', '绯云晶石·精'
+            '无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精'
         ];
         
         // 所有材料价格存储
         let materialPrices = {};
         let materialPriceHistory = {};
+        
+        // 材料来源配置（用于2级材料：髓类、晶石类）
+        // 'craft' = 自己制作, 'buy' = 交易行购买
+        let materialSourceConfig = {};
+        
+        // 二级产物材料列表（所有需要来源选择的材料）
+        // 包括：革类、髓类、精炼材料（精华类）、晶石类
+        const secondaryMaterials = [
+            // 革类（缝纫）
+            '半莲革', '九穗革', '灯芯革',
+            // 髓类（锻造/雕刻）
+            '黄铜髓', '雷碣髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓',
+            // 精炼材料（炼药）
+            '无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精',
+            // 晶石类（雕刻）
+            '黄铜晶石', '雷碣晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'
+        ];
+        
+        // 检查是否是二级材料
+        function isSecondaryMaterial(materialName) {
+            return secondaryMaterials.includes(materialName);
+        }
         
         // 配方数据
         const recipesData = {
@@ -832,17 +916,17 @@
                     consumable: { name: '消耗品', items: [
                         { name: '庚金石', level: 15, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '玛瑙沙': 2 } },
                         { name: '庚金石(绑)', level: 15, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '玛瑙沙': 2 } },
-                        { name: '刃芒石', level: 20, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠晶': 1, '珍珠': 2 } },
-                        { name: '刃芒石(绑)', level: 20, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠晶': 1, '珍珠': 2 } },
-                        { name: '流星石', level: 25, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云石': 1, '玄脉晶': 2 } },
-                        { name: '流星石(绑)', level: 25, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云石': 1, '玄脉晶': 2 } }
+                        { name: '刃芒石', level: 20, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠石': 1, '珍珠': 2 } },
+                        { name: '刃芒石(绑)', level: 20, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠石': 1, '珍珠': 2 } },
+                        { name: '流星石', level: 25, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云晶石': 1, '玄脉晶': 2 } },
+                        { name: '流星石(绑)', level: 25, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云晶石': 1, '玄脉晶': 2 } }
                     ]},
                     material: { name: '材料', items: [
                         { name: '黄铜髓', level: 1, output: 1, yuanqi: 100, materials: { '黄铜矿': 5 } },
-                        { name: '雷磄髓', level: 5, output: 1, yuanqi: 100, materials: { '雷磄砖': 5 } },
+                        { name: '雷碣髓', level: 5, output: 1, yuanqi: 100, materials: { '雷碣砖': 5 } },
                         { name: '雄黄髓', level: 10, output: 1, yuanqi: 100, materials: { '雄黄霜': 5 } },
                         { name: '玛瑙髓', level: 15, output: 1, yuanqi: 100, materials: { '玛瑙沙': 10, '珍珠': 1, '蚌壳': 2 } },
-                        { name: '点翠髓', level: 20, output: 1, yuanqi: 100, materials: { '点翠晶': 15, '珍珠': 1, '蚌壳': 2 } },
+                        { name: '点翠髓', level: 20, output: 1, yuanqi: 100, materials: { '点翠石': 15, '珍珠': 1, '蚌壳': 2 } },
                         { name: '绯云髓', level: 25, output: 1, yuanqi: 100, materials: { '绯云石': 20, '珍珠': 1, '蚌壳': 2 } }
                     ]},
                     infusion: { name: '灌注符', items: [
@@ -972,10 +1056,10 @@
                     ]},
                     material: { name: '材料', items: [
                         { name: '黄铜晶石', level: 1, output: 1, yuanqi: 100, materials: { '黄铜矿': 5 } },
-                        { name: '雷磄晶石', level: 5, output: 1, yuanqi: 100, materials: { '雷磄砖': 5 } },
+                        { name: '雷碣晶石', level: 5, output: 1, yuanqi: 100, materials: { '雷碣砖': 5 } },
                         { name: '雄黄晶石', level: 10, output: 1, yuanqi: 100, materials: { '雄黄霜': 5 } },
                         { name: '玛瑙晶石', level: 15, output: 1, yuanqi: 100, materials: { '玛瑙沙': 10, '珍珠': 1, '海藻': 2 } },
-                        { name: '点翠晶石', level: 20, output: 1, yuanqi: 100, materials: { '点翠晶': 15, '珍珠': 1, '海藻': 2 } },
+                        { name: '点翠晶石', level: 20, output: 1, yuanqi: 100, materials: { '点翠石': 15, '珍珠': 1, '海藻': 2 } },
                         { name: '绯云晶石', level: 25, output: 1, yuanqi: 100, materials: { '绯云石': 20, '珍珠': 1, '海藻': 2 } }
                     ]},
                     infusion: { name: '灌注符', items: [
@@ -987,12 +1071,12 @@
                         { name: '金身符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
                         { name: '蚀骨符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
                         // 20级 - 万载版
-                        { name: '万载惊芒符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载运转符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载大衍符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载摧岳符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载金身符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载蚀骨符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠晶': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载惊芒符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载运转符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载大衍符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载摧岳符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载金身符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载蚀骨符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
                         // 25级 - 归墟版
                         { name: '归墟惊芒符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
                         { name: '归墟运转符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
@@ -1016,6 +1100,7 @@
         
         function init() {
             loadPrices();
+            loadMaterialSourceConfig();  // 加载材料来源配置
             renderMaterialsPanel();
             renderProfessionTabs();
             renderCategoryTabs();
@@ -1086,6 +1171,16 @@
                 return getMaterialPrice(material) || 0;
             }
             
+            // 如果是2级材料（革类、髓类、精炼材料、晶石类），检查用户选择的来源
+            if (isSecondaryMaterial(material)) {
+                const source = materialSourceConfig[material] || 'craft';
+                if (source === 'buy') {
+                    // 选择从交易行购买：直接返回该材料的交易行价格
+                    return getMaterialPrice(material) || 0;
+                }
+                // 选择自己制作：继续按配方计算成本
+            }
+            
             // 如果是生产材料，根据配方计算成本
             const productionCost = calculateProductionCost(material);
             if (productionCost > 0) {
@@ -1102,10 +1197,10 @@
             const productionRecipes = {
                 // 锻造材料
                 '黄铜髓': { materials: { '黄铜矿': 5 } },
-                '雷磄髓': { materials: { '雷磄砖': 5 } },
+                '雷碣髓': { materials: { '雷碣砖': 5 } },
                 '雄黄髓': { materials: { '雄黄霜': 5 } },
                 '玛瑙髓': { materials: { '玛瑙沙': 10, '珍珠': 1, '蚌壳': 2 } },
-                '点翠髓': { materials: { '点翠晶': 15, '珍珠': 1, '蚌壳': 2 } },
+                '点翠髓': { materials: { '点翠石': 15, '珍珠': 1, '蚌壳': 2 } },
                 '绯云髓': { materials: { '绯云石': 20, '珍珠': 1, '蚌壳': 2 } },
                 // 缝纫材料
                 '无条革': { materials: { '无条茧': 5 } },
@@ -1116,10 +1211,10 @@
                 '灯芯革': { materials: { '灯芯枝': 20, '珍珠': 2, '海藻': 1 } },
                 // 雕刻材料
                 '黄铜晶石': { materials: { '黄铜矿': 5 } },
-                '雷磄晶石': { materials: { '雷磄砖': 5 } },
+                '雷碣晶石': { materials: { '雷碣砖': 5 } },
                 '雄黄晶石': { materials: { '雄黄霜': 5 } },
                 '玛瑙晶石': { materials: { '玛瑙沙': 10, '珍珠': 1, '海藻': 2 } },
-                '点翠晶石': { materials: { '点翠晶': 15, '珍珠': 1, '海藻': 2 } },
+                '点翠晶石': { materials: { '点翠石': 15, '珍珠': 1, '海藻': 2 } },
                 '绯云晶石': { materials: { '绯云石': 20, '珍珠': 1, '海藻': 2 } },
                 // 灵草精（炼药）
                 '无条茧·精': { materials: { '无条茧': 10 } },
@@ -1128,13 +1223,6 @@
                 '半边莲尖·精': { materials: { '半边莲尖': 10 } },
                 '九穗花·精': { materials: { '九穗花': 10 } },
                 '灯芯枝·精': { materials: { '灯芯枝': 10 } },
-                // 晶石精（炼药）
-                '黄铜晶石·精': { materials: { '黄铜矿': 10 } },
-                '雷磄晶石·精': { materials: { '雷磄砖': 10 } },
-                '雄黄晶石·精': { materials: { '雄黄霜': 10 } },
-                '玛瑙晶石·精': { materials: { '玛瑙沙': 10 } },
-                '点翠晶石·精': { materials: { '点翠晶': 10 } },
-                '绯云晶石·精': { materials: { '绯云石': 10 } },
                 // 烹饪材料
                 '千心粉': { materials: { '九穗花': 10, '珍珠': 2 } },
                 '镜花蜜': { materials: { '灯芯枝': 10, '珍珠': 2 } },
@@ -1168,7 +1256,7 @@
         
         function renderMaterialsPanel() {
             // 基础材料，按类别分组
-            const oreMaterials = ['黄铜矿', '雷磄砖', '雄黄霜', '玛瑙沙', '点翠晶', '绯云石'];
+            const oreMaterials = ['黄铜矿', '雷碣砖', '雄黄霜', '玛瑙沙', '点翠石', '绯云石'];
             const herbMaterials = ['无条茧', '苦辛叶', '都夷露', '半边莲尖', '九穗花', '灯芯枝'];
             const essenceMaterials = ['良之精髓', '珍之精髓', '灵之精髓'];
             const seafoodMaterials = ['蚌壳', '珍珠', '海藻'];
@@ -1178,11 +1266,14 @@
             ];
             const otherMaterials = ['枯荣枝', '玄芝叶', '玄芝根', '玄脉晶', '玄脉髓'];
             
-            // 生产物材料
-            const refinedMaterials = ['无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精'];
-            const leatherMaterials = ['无条革', '苦辛革', '都夷革', '半莲革', '九穗革'];
-            const marrowMaterials = ['黄铜髓', '雷磄髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓'];
-            const crystalMaterials = ['黄铜晶石', '雷磄晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'];
+            // 生产物材料（二级产物）
+            const refinedMaterials = [
+                // 精炼材料（精华类）- 炼药
+                '无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精'
+            ];
+            const leatherMaterials = ['半莲革', '九穗革', '灯芯革'];  // 革类 - 缝纫
+            const marrowMaterials = ['黄铜髓', '雷碣髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓'];  // 髓类 - 锻造/雕刻
+            const crystalMaterials = ['黄铜晶石', '雷碣晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'];  // 晶石类 - 雕刻
             
             renderMaterialCategory('basic-materials', oreMaterials);
             renderMaterialCategory('herb-materials', herbMaterials);
@@ -1206,6 +1297,17 @@
                     const history = (materialPriceHistory[material] || []).slice(1);
                     const historyText = history.length > 0 ? `(${history.join('→')})` : '';
                     
+                    // 检查是否是2级材料
+                    const isSecondary = isSecondaryMaterial(material);
+                    const source = materialSourceConfig[material] || 'craft';
+                    const sourceToggle = isSecondary ? `
+                        <button class="source-toggle ${source}" 
+                                onclick="toggleMaterialSource('${material}')"
+                                title="切换材料来源">
+                            ${source === 'craft' ? '自' : '买'}
+                        </button>
+                    ` : '';
+                    
                     return `
                         <div class="material-item">
                             <span class="material-name">${material}</span>
@@ -1215,6 +1317,7 @@
                                    placeholder="0"
                                    onchange="updateMaterialPrice('${material}', this.value)">
                             <span class="price-history">${historyText}</span>
+                            ${sourceToggle}
                         </div>
                     `;
                 }).join('');
@@ -1236,6 +1339,39 @@
                     }
                 });
             }
+        }
+        
+        // 切换材料来源
+        function toggleMaterialSource(material) {
+            const currentSource = materialSourceConfig[material] || 'craft';
+            materialSourceConfig[material] = currentSource === 'craft' ? 'buy' : 'craft';
+            saveMaterialSourceConfig();
+            
+            // 更新按钮样式
+            const button = document.querySelector(`button[onclick*="toggleMaterialSource('${material}')"]`);
+            if (button) {
+                button.textContent = materialSourceConfig[material] === 'craft' ? '自' : '买';
+                button.className = `source-toggle ${materialSourceConfig[material]}`;
+            }
+            
+            // 重新计算并更新显示
+            updateRanking();
+            updateGlobalStats();
+            renderRecipes();
+        }
+        
+        // 保存材料来源配置
+        function saveMaterialSourceConfig() {
+            localStorage.setItem('zhuxian_material_source_config', JSON.stringify(materialSourceConfig));
+        }
+        
+        // 加载材料来源配置
+        function loadMaterialSourceConfig() {
+            const saved = localStorage.getItem('zhuxian_material_source_config');
+            if (saved) {
+                materialSourceConfig = JSON.parse(saved);
+            }
+        }
         }
         
         function renderProfessionTabs() {
