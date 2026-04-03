@@ -71,46 +71,61 @@
             margin-bottom: 15px;
         }
         
+        .category-header {
+            cursor: pointer;
+            user-select: none;
+            margin-bottom: 10px;
+        }
+        
         .material-category h3 {
             color: #ffd700;
             font-size: 0.95em;
-            margin-bottom: 10px;
             padding: 8px 12px;
             background: rgba(255,215,0,0.1);
             border-radius: 5px;
-            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: space-between;
             transition: all 0.3s;
-            user-select: none;
+            margin: 0;
         }
         
         .material-category h3:hover {
             background: rgba(255,215,0,0.2);
         }
         
-        .material-category h3::after {
-            content: '▼';
+        .toggle-icon {
             font-size: 0.8em;
             transition: transform 0.3s;
         }
         
-        .material-category h3.collapsed::after {
-            transform: rotate(-90deg);
-        }
-        
-        .material-category .category-content {
-            max-height: 2000px;
+        .category-content {
             overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s;
-            opacity: 1;
-        }
-        
-        .material-category h3.collapsed + .category-content {
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
             max-height: 0;
             opacity: 0;
         }
+        
+        .category-content.expanded {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        .category-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+        
+        .category-content.expanded .material-input {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 移除冲突的CSS规则，使用新的折叠系统 */
         
         .material-item {
             display: flex;
@@ -496,53 +511,73 @@
                 <h2>💎 材料价格设置</h2>
                 
                 <div class="material-category">
-                    <h3>⛏️ 矿石类</h3>
-                    <div class="category-content" id="basic-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('basic-materials')">
+                        <h3>⛏️ 矿石类 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="basic-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>🌿 灵草类</h3>
-                    <div class="category-content" id="herb-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('herb-materials')">
+                        <h3>🌿 灵草类 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="herb-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>✨ 精髓类</h3>
-                    <div class="category-content" id="essence-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('essence-materials')">
+                        <h3>✨ 精髓类 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="essence-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>🦪 海鲜贝壳类</h3>
-                    <div class="category-content" id="seafood-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('seafood-materials')">
+                        <h3>🦪 海鲜贝壳类 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="seafood-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>🍳 食材类</h3>
-                    <div class="category-content" id="food-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('food-materials')">
+                        <h3>🍳 食材类 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="food-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>🌳 其他采集材料</h3>
-                    <div class="category-content" id="other-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('other-materials')">
+                        <h3>🌳 其他采集材料 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="other-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>🔬 精炼材料</h3>
-                    <div class="category-content" id="refined-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('refined-materials')">
+                        <h3>🔬 精炼材料 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="refined-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>🧵 革类材料</h3>
-                    <div class="category-content" id="leather-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('leather-materials')">
+                        <h3>🧵 革类材料 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="leather-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>💧 髓类材料</h3>
-                    <div class="category-content" id="marrow-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('marrow-materials')">
+                        <h3>💧 髓类材料 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="marrow-materials"></div>
                 </div>
                 
                 <div class="material-category">
-                    <h3>💎 晶石类材料</h3>
-                    <div class="category-content" id="crystal-materials"></div>
+                    <div class="category-header" onclick="toggleCategory('crystal-materials')">
+                        <h3>💎 晶石类材料 <span class="toggle-icon">▼</span></h3>
+                    </div>
+                    <div class="category-content collapsed" id="crystal-materials"></div>
                 </div>
             </aside>
             
@@ -599,6 +634,179 @@
     </div>
 
     <script>
+        // ==================== 折叠/展开功能 ====================
+        
+        // 切换材料分类的展开/折叠状态
+        function toggleCategory(categoryId) {
+            console.log('切换分类:', categoryId);
+            const content = document.getElementById(categoryId);
+            if (!content) {
+                console.error('找不到元素:', categoryId);
+                return;
+            }
+            
+            const header = content.previousElementSibling;
+            if (!header) {
+                console.error('找不到头部元素:', categoryId);
+                return;
+            }
+            
+            const icon = header.querySelector('.toggle-icon');
+            console.log('当前状态 - expanded:', content.classList.contains('expanded'), 'collapsed:', content.classList.contains('collapsed'));
+            
+            if (content.classList.contains('expanded')) {
+                // 当前是展开状态，切换到折叠
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                if (icon) icon.textContent = '▼';
+                console.log('已折叠');
+            } else {
+                // 当前是折叠状态，切换到展开
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                if (icon) icon.textContent = '▲';
+                console.log('已展开');
+            }
+        }
+        
+        // 展开指定分类
+        function expandCategory(categoryId) {
+            const content = document.getElementById(categoryId);
+            if (!content) {
+                console.error('找不到分类内容元素:', categoryId);
+                return;
+            }
+            const header = content.previousElementSibling;
+            if (!header) {
+                console.error('找不到分类标题元素:', categoryId);
+                return;
+            }
+            const icon = header.querySelector('.toggle-icon');
+            
+            content.classList.remove('collapsed');
+            content.classList.add('expanded');
+            if (icon) icon.textContent = '▲';
+        }
+        
+        // 折叠指定分类
+        function collapseCategory(categoryId) {
+            const content = document.getElementById(categoryId);
+            if (!content) {
+                console.error('找不到分类内容元素:', categoryId);
+                return;
+            }
+            const header = content.previousElementSibling;
+            if (!header) {
+                console.error('找不到分类标题元素:', categoryId);
+                return;
+            }
+            const icon = header.querySelector('.toggle-icon');
+            
+            content.classList.remove('expanded');
+            content.classList.add('collapsed');
+            if (icon) icon.textContent = '▼';
+        }
+        
+        // 展开所有分类
+        function expandAllCategories() {
+            const categories = [
+                'basic-materials', 'herb-materials', 'essence-materials',
+                'seafood-materials', 'food-materials', 'other-materials',
+                'refined-materials', 'leather-materials', 'marrow-materials',
+                'crystal-materials'
+            ];
+            
+            categories.forEach(categoryId => {
+                expandCategory(categoryId);
+            });
+        }
+        
+        // 折叠所有分类
+        function collapseAllCategories() {
+            const categories = [
+                'basic-materials', 'herb-materials', 'essence-materials',
+                'seafood-materials', 'food-materials', 'other-materials',
+                'refined-materials', 'leather-materials', 'marrow-materials',
+                'crystal-materials'
+            ];
+            
+            categories.forEach(categoryId => {
+                collapseCategory(categoryId);
+            });
+        }
+        
+        // 页面加载后初始化所有分类为折叠状态
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，初始化折叠功能...');
+            
+            // 测试折叠功能是否正常工作
+            setTimeout(function() {
+                console.log('测试折叠功能:');
+                const categories = [
+                    'basic-materials', 'herb-materials', 'essence-materials',
+                    'seafood-materials', 'food-materials', 'other-materials',
+                    'refined-materials', 'leather-materials', 'marrow-materials',
+                    'crystal-materials'
+                ];
+                
+                categories.forEach(categoryId => {
+                    const content = document.getElementById(categoryId);
+                    if (content) {
+                        console.log(`${categoryId}:`, 
+                            '存在:', !!content,
+                            '有collapsed类:', content.classList.contains('collapsed'),
+                            '有expanded类:', content.classList.contains('expanded'));
+                    } else {
+                        console.error(`找不到分类: ${categoryId}`);
+                    }
+                });
+            }, 100);
+            
+            // 默认所有分类都是折叠状态（通过HTML的collapsed类实现）
+            // 添加展开/折叠控制按钮
+            const materialsPanel = document.querySelector('.materials-panel');
+            const controlDiv = document.createElement('div');
+            controlDiv.className = 'category-controls';
+            controlDiv.innerHTML = `
+                <button onclick="expandAllCategories()" class="control-btn expand-all">展开全部</button>
+                <button onclick="collapseAllCategories()" class="control-btn collapse-all">折叠全部</button>
+            `;
+            materialsPanel.insertBefore(controlDiv, materialsPanel.children[1]);
+            
+            // 为控制按钮添加样式
+            const style = document.createElement('style');
+            style.textContent = `
+                .category-controls {
+                    display: flex;
+                    gap: 10px;
+                    margin-bottom: 15px;
+                }
+                .control-btn {
+                    flex: 1;
+                    padding: 5px 10px;
+                    background: rgba(233, 69, 96, 0.2);
+                    color: #e94560;
+                    border: 1px solid rgba(233, 69, 96, 0.3);
+                    border-radius: 4px;
+                    cursor: pointer;
+                    font-size: 0.85em;
+                    transition: all 0.3s;
+                }
+                .control-btn:hover {
+                    background: rgba(233, 69, 96, 0.3);
+                }
+                .control-btn.expand-all {
+                    background: rgba(46, 196, 182, 0.2);
+                    color: #2ec4b6;
+                    border-color: rgba(46, 196, 182, 0.3);
+                }
+                .control-btn.expand-all:hover {
+                    background: rgba(46, 196, 182, 0.3);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
         // ==================== 数据定义 ====================
         
         // 基础采集材料（直接从游戏获得，不需要产出物）
@@ -999,9 +1207,12 @@
             
             // 生产物材料
             const refinedMaterials = ['无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精'];
-            const leatherMaterials = ['无条革', '苦辛革', '都夷革', '半莲革', '九穗革'];
+            const leatherMaterials = ['无条革', '苦辛革', '都夷革', '半莲革', '九穗革', '灯芯革'];
             const marrowMaterials = ['黄铜髓', '雷磄髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓'];
             const crystalMaterials = ['黄铜晶石', '雷磄晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'];
+            
+            // 添加调试信息
+            console.log('📊 革类材料列表:', leatherMaterials);
             
             renderMaterialCategory('basic-materials', oreMaterials);
             renderMaterialCategory('herb-materials', herbMaterials);
@@ -1013,39 +1224,48 @@
             renderMaterialCategory('leather-materials', leatherMaterials);
             renderMaterialCategory('marrow-materials', marrowMaterials);
             renderMaterialCategory('crystal-materials', crystalMaterials);
-            
-            // 添加折叠功能
-            initCollapse();
-        }
-        
-        function initCollapse() {
-            const categories = document.querySelectorAll('.material-category h3');
-            categories.forEach(header => {
-                header.addEventListener('click', () => {
-                    header.classList.toggle('collapsed');
-                });
-            });
         }
         
         function renderMaterialCategory(containerId, materials) {
             const container = document.getElementById(containerId);
-            container.innerHTML = materials.map(material => {
-                const price = getMaterialPrice(material);
-                const history = (materialPriceHistory[material] || []).slice(1);
-                const historyText = history.length > 0 ? `(${history.join('→')})` : '';
-                
-                return `
-                    <div class="material-item">
-                        <span class="material-name">${material}</span>
-                        <input type="number" 
-                               class="material-input" 
-                               value="${price || ''}" 
-                               placeholder="0"
-                               onchange="updateMaterialPrice('${material}', this.value)">
-                        <span class="price-history">${historyText}</span>
-                    </div>
-                `;
-            }).join('');
+            
+            // 如果容器中已有内容，不再重新渲染，只更新价格
+            if (container.children.length === 0) {
+                container.innerHTML = materials.map(material => {
+                    const price = getMaterialPrice(material);
+                    const history = (materialPriceHistory[material] || []).slice(1);
+                    const historyText = history.length > 0 ? `(${history.join('→')})` : '';
+                    
+                    return `
+                        <div class="material-item">
+                            <span class="material-name">${material}</span>
+                            <input type="number" 
+                                   class="material-input" 
+                                   value="${price || ''}" 
+                                   placeholder="0"
+                                   onchange="updateMaterialPrice('${material}', this.value)">
+                            <span class="price-history">${historyText}</span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                // 只更新价格和历史记录
+                materials.forEach(material => {
+                    const price = getMaterialPrice(material);
+                    const history = (materialPriceHistory[material] || []).slice(1);
+                    const historyText = history.length > 0 ? `(${history.join('→')})` : '';
+                    
+                    const input = container.querySelector(`input[onchange*="${material}"]`);
+                    const historySpan = container.querySelector(`input[onchange*="${material}"] + .price-history`);
+                    
+                    if (input) {
+                        input.value = price || '';
+                        if (historySpan) {
+                            historySpan.textContent = historyText;
+                        }
+                    }
+                });
+            }
         }
         
         function renderProfessionTabs() {
