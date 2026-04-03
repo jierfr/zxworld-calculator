@@ -1,0 +1,362 @@
+{
+  "professions": [
+    {
+      "name": "炼丹",
+      "icon": "⚗️",
+      "categories": [
+        {
+          "name": "丹药",
+          "recipes": [
+            {
+              "name": "造化丹",
+              "level": 1,
+              "energy": 100,
+              "materials": [
+                { "name": "无条茧·精", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "甘露丸",
+              "level": 5,
+              "energy": 100,
+              "materials": [
+                { "name": "苦辛叶·精", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "真元丹",
+              "level": 10,
+              "energy": 100,
+              "materials": [
+                { "name": "都夷露·精", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "同寿丸",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "半边莲尖·精", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "灵犀丸",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "半边莲尖·精", "quantity": 1 },
+                { "name": "半莲革", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "拓脉丸",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "半边莲尖·精", "quantity": 1 },
+                { "name": "玛瑙晶石", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "天河玉露",
+              "level": 20,
+              "energy": 100,
+              "materials": [
+                { "name": "九穗花·精", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "破妄丸",
+              "level": 20,
+              "energy": 200,
+              "materials": [
+                { "name": "九穗花·精", "quantity": 1 },
+                { "name": "九穗革", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "芳华丸",
+              "level": 20,
+              "energy": 200,
+              "materials": [
+                { "name": "九穗花·精", "quantity": 1 },
+                { "name": "九穗革", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "神通丸",
+              "level": 20,
+              "energy": 200,
+              "materials": [
+                { "name": "九穗花·精", "quantity": 1 },
+                { "name": "点翠晶石", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "乙木长生液",
+              "level": 25,
+              "energy": 100,
+              "materials": [
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "天机丸",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "灯芯革", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "时溯丸",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "灯芯革", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "共鸣丸",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "绯云晶石", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "道蚀丸",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "绯云晶石", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "灵药",
+          "recipes": [
+            {
+              "name": "凤血丹",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "半边莲尖·精", "quantity": 1 },
+                { "name": "玛瑙髓", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "焚身丹",
+              "level": 20,
+              "energy": 200,
+              "materials": [
+                { "name": "九穗花·精", "quantity": 1 },
+                { "name": "点翠髓", "quantity": 1 },
+                { "name": "玄芝叶", "quantity": 1 }
+              ]
+            },
+            {
+              "name": "真龙丹",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "绯云髓", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 1 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "缝纫",
+      "icon": "🧵",
+      "categories": [
+        {
+          "name": "消耗品",
+          "recipes": [
+            {
+              "name": "云纹片",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "半莲革", "quantity": 1 },
+                { "name": "半边莲尖·精", "quantity": 1 },
+                { "name": "良之精髓", "quantity": 10 }
+              ]
+            },
+            {
+              "name": "玄武片",
+              "level": 20,
+              "energy": 200,
+              "materials": [
+                { "name": "九穗革", "quantity": 1 },
+                { "name": "九穗花·精", "quantity": 1 },
+                { "name": "珍之精髓", "quantity": 10 },
+                { "name": "玄芝叶", "quantity": 2 }
+              ]
+            },
+            {
+              "name": "镇岳片",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯革", "quantity": 1 },
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "灵之精髓", "quantity": 10 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "雕刻",
+      "icon": "🔨",
+      "categories": [
+        {
+          "name": "消耗品",
+          "recipes": [
+            {
+              "name": "虹光魄",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "玛瑙髓", "quantity": 1 },
+                { "name": "玛瑙晶石", "quantity": 1 },
+                { "name": "良之精髓", "quantity": 10 }
+              ]
+            },
+            {
+              "name": "灵晶魄",
+              "level": 20,
+              "energy": 200,
+              "materials": [
+                { "name": "点翠髓", "quantity": 1 },
+                { "name": "点翠晶石", "quantity": 1 },
+                { "name": "玄脉髓", "quantity": 2 },
+                { "name": "珍之精髓", "quantity": 10 }
+              ]
+            },
+            {
+              "name": "仙灵魄",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "绯云髓", "quantity": 1 },
+                { "name": "绯云晶石", "quantity": 1 },
+                { "name": "玄脉晶", "quantity": 2 },
+                { "name": "灵之精髓", "quantity": 10 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "烹饪",
+      "icon": "🍳",
+      "categories": [
+        {
+          "name": "材料",
+          "recipes": [
+            {
+              "name": "灯芯饭",
+              "level": 25,
+              "energy": 200,
+              "materials": [
+                { "name": "灯芯革", "quantity": 1 },
+                { "name": "灯芯枝·精", "quantity": 1 },
+                { "name": "玄芝根", "quantity": 2 }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "锻造",
+      "icon": "⚒️",
+      "categories": [
+        {
+          "name": "消耗品",
+          "recipes": [
+            {
+              "name": "玄铁锭",
+              "level": 15,
+              "energy": 200,
+              "materials": [
+                { "name": "玛瑙髓", "quantity": 1 },
+                { "name": "玛瑙晶石", "quantity": 1 },
+                { "name": "良之精髓", "quantity": 10 }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "materials": {
+    "革类": [
+      { "name": "半莲革", "category": "皮革", "level": 15 },
+      { "name": "九穗革", "category": "皮革", "level": 20 },
+      { "name": "灯芯革", "category": "皮革", "level": 25 }
+    ],
+    "精华类": [
+      { "name": "半边莲尖·精", "category": "草药精华", "level": 15 },
+      { "name": "九穗花·精", "category": "草药精华", "level": 20 },
+      { "name": "灯芯枝·精", "category": "草药精华", "level": 25 },
+      { "name": "无条茧·精", "category": "草药精华", "level": 1 },
+      { "name": "苦辛叶·精", "category": "草药精华", "level": 5 },
+      { "name": "都夷露·精", "category": "草药精华", "level": 10 }
+    ],
+    "晶石类": [
+      { "name": "玛瑙晶石", "category": "矿物", "level": 15 },
+      { "name": "点翠晶石", "category": "矿物", "level": 20 },
+      { "name": "绯云晶石", "category": "矿物", "level": 25 },
+      { "name": "玛瑙髓", "category": "矿物", "level": 15 },
+      { "name": "点翠髓", "category": "矿物", "level": 20 },
+      { "name": "绯云髓", "category": "矿物", "level": 25 }
+    ],
+    "辅助材料": [
+      { "name": "玄芝叶", "category": "草药", "level": 15 },
+      { "name": "玄芝根", "category": "草药", "level": 25 },
+      { "name": "玄脉髓", "category": "特殊", "level": 20 },
+      { "name": "玄脉晶", "category": "特殊", "level": 25 }
+    ],
+    "精髓类": [
+      { "name": "良之精髓", "category": "精髓", "level": 15 },
+      { "name": "珍之精髓", "category": "精髓", "level": 20 },
+      { "name": "灵之精髓", "category": "精髓", "level": 25 }
+    ]
+  },
+  "meta": {
+    "game": "诛仙世界",
+    "version": "1.1",
+    "created": "2026-04-03T03:25:00.000Z",
+    "description": "诛仙世界副职业完整配方数据，包含5大职业、31种配方、20种材料",
+    "author": "jierfr",
+    "license": "MIT",
+    "features": ["完整的配方数据", "准确的材料级别", "支持5个副职业"]
+  }
+}
