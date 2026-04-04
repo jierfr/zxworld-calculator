@@ -116,7 +116,7 @@
             opacity: 0;
         }
         
-        .category-content.expanded .material-item {
+        .category-content.expanded .material-input {
             animation: fadeIn 0.3s ease-out;
         }
         
@@ -124,6 +124,8 @@
             from { opacity: 0; transform: translateY(-5px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* 移除冲突的CSS规则，使用新的折叠系统 */
         
         .material-item {
             display: flex;
@@ -543,6 +545,11 @@
     <div class="container">
         <header>
             <h1>🏔️ 诛仙世界副职业成本计算器</h1>
+            <div class="author-signature" style="text-align: center; margin: 10px 0; color: rgba(255,255,255,0.9); font-size: 16px; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">
+                <span style="background: rgba(233, 69, 96, 0.7); padding: 5px 15px; border-radius: 20px;">
+                    作者：B站 丷孑然
+                </span>
+            </div>
             <p>智能计算成本、利润、元气收益，助你成为修仙界首富</p>
         </header>
         
@@ -798,6 +805,31 @@
         
         // 页面加载后初始化所有分类为折叠状态
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，初始化折叠功能...');
+            
+            // 测试折叠功能是否正常工作
+            setTimeout(function() {
+                console.log('测试折叠功能:');
+                const categories = [
+                    'basic-materials', 'herb-materials', 'essence-materials',
+                    'seafood-materials', 'food-materials', 'other-materials',
+                    'refined-materials', 'leather-materials', 'marrow-materials',
+                    'crystal-materials'
+                ];
+                
+                categories.forEach(categoryId => {
+                    const content = document.getElementById(categoryId);
+                    if (content) {
+                        console.log(`${categoryId}:`, 
+                            '存在:', !!content,
+                            '有collapsed类:', content.classList.contains('collapsed'),
+                            '有expanded类:', content.classList.contains('expanded'));
+                    } else {
+                        console.error(`找不到分类: ${categoryId}`);
+                    }
+                });
+            }, 100);
+            
             // 默认所有分类都是折叠状态（通过HTML的collapsed类实现）
             // 添加展开/折叠控制按钮
             const materialsPanel = document.querySelector('.materials-panel');
@@ -877,16 +909,11 @@
             '黄铜晶石', '雷碣晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'
         ];
         
-        // 灵草精/晶石精（炼药，不再显示）
-        const refinedMaterials = [
-            '无条茧·精', '苦辛叶·精', '都夷露·精', '半边莲尖·精', '九穗花·精', '灯芯枝·精'
-        ];
-        
         // 所有材料价格存储
         let materialPrices = {};
         let materialPriceHistory = {};
         
-        // 材料来源配置（用于2级材料：髓类、晶石类）
+        // 材料来源配置（用于所有二级产物材料）
         // 'craft' = 自己制作, 'buy' = 交易行购买
         let materialSourceConfig = {};
         
@@ -914,10 +941,10 @@
                 name: '锻造',
                 categories: {
                     consumable: { name: '消耗品', items: [
-                        { name: '庚金石', level: 15, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '玛瑙沙': 2 } },
-                        { name: '庚金石(绑)', level: 15, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '玛瑙沙': 2 } },
-                        { name: '刃芒石', level: 20, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠石': 1, '珍珠': 2 } },
-                        { name: '刃芒石(绑)', level: 20, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '点翠髓': 1, '点翠石': 1, '珍珠': 2 } },
+                        { name: '庚金石', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 10 } },
+                        { name: '庚金石(绑)', level: 15, output: 3, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 10 } },
+                        { name: '刃芒石', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '珍之精髓': 10, '玄脉髓': 2 } },
+                        { name: '刃芒石(绑)', level: 20, output: 3, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '珍之精髓': 10, '玄脉髓': 2 } },
                         { name: '流星石', level: 25, output: 2, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云晶石': 1, '玄脉晶': 2 } },
                         { name: '流星石(绑)', level: 25, output: 3, yuanqi: 200, materials: { '灵之精髓': 10, '绯云髓': 1, '绯云晶石': 1, '玄脉晶': 2 } }
                     ]},
@@ -1064,26 +1091,26 @@
                     ]},
                     infusion: { name: '灌注符', items: [
                         // 15级 - 基础版
-                        { name: '惊芒符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
-                        { name: '运转符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
-                        { name: '大衍符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
-                        { name: '摧岳符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
-                        { name: '金身符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
-                        { name: '蚀骨符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙沙': 1, '良之精髓': 20 } },
+                        { name: '惊芒符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 20 } },
+                        { name: '运转符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 20 } },
+                        { name: '大衍符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 20 } },
+                        { name: '摧岳符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 20 } },
+                        { name: '金身符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 20 } },
+                        { name: '蚀骨符', level: 15, output: 2, yuanqi: 200, materials: { '玛瑙晶石': 1, '玛瑙髓': 1, '良之精髓': 20 } },
                         // 20级 - 万载版
-                        { name: '万载惊芒符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载运转符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载大衍符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载摧岳符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载金身符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
-                        { name: '万载蚀骨符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠石': 1, '珍珠': 2, '珍之精髓': 30 } },
+                        { name: '万载惊芒符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '玄脉髓': 2, '珍之精髓': 30 } },
+                        { name: '万载运转符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '玄脉髓': 2, '珍之精髓': 30 } },
+                        { name: '万载大衍符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '玄脉髓': 2, '珍之精髓': 30 } },
+                        { name: '万载摧岳符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '玄脉髓': 2, '珍之精髓': 30 } },
+                        { name: '万载金身符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '玄脉髓': 2, '珍之精髓': 30 } },
+                        { name: '万载蚀骨符', level: 20, output: 2, yuanqi: 200, materials: { '点翠晶石': 1, '点翠髓': 1, '玄脉髓': 2, '珍之精髓': 30 } },
                         // 25级 - 归墟版
-                        { name: '归墟惊芒符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
-                        { name: '归墟运转符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
-                        { name: '归墟大衍符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
-                        { name: '归墟摧岳符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
-                        { name: '归墟金身符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } },
-                        { name: '归墟蚀骨符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云石': 1, '玄脉晶': 2, '灵之精髓': 40 } }
+                        { name: '归墟惊芒符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云髓': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟运转符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云髓': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟大衍符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云髓': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟摧岳符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云髓': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟金身符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云髓': 1, '玄脉晶': 2, '灵之精髓': 40 } },
+                        { name: '归墟蚀骨符', level: 25, output: 2, yuanqi: 200, materials: { '绯云晶石': 1, '绯云髓': 1, '玄脉晶': 2, '灵之精髓': 40 } }
                     ]},
                     special: { name: '特殊', items: [
                         { name: '五行通明印', level: 25, output: 1, yuanqi: 40, materials: { '枯荣枝': 1, '灵之精髓': 10, '玄脉晶': 4, '绯云石': 60 } }
@@ -1275,6 +1302,9 @@
             const marrowMaterials = ['黄铜髓', '雷碣髓', '雄黄髓', '玛瑙髓', '点翠髓', '绯云髓'];  // 髓类 - 锻造/雕刻
             const crystalMaterials = ['黄铜晶石', '雷碣晶石', '雄黄晶石', '玛瑙晶石', '点翠晶石', '绯云晶石'];  // 晶石类 - 雕刻
             
+            // 添加调试信息
+            console.log('📊 革类材料列表:', leatherMaterials);
+            
             renderMaterialCategory('basic-materials', oreMaterials);
             renderMaterialCategory('herb-materials', herbMaterials);
             renderMaterialCategory('essence-materials', essenceMaterials);
@@ -1371,7 +1401,6 @@
             if (saved) {
                 materialSourceConfig = JSON.parse(saved);
             }
-        }
         }
         
         function renderProfessionTabs() {
@@ -1570,5 +1599,10 @@
         
         document.addEventListener('DOMContentLoaded', init);
     </script>
+    
+    <!-- 感谢使用 -->
+    <div style="text-align: center; margin-top: 40px; padding: 20px; color: #666; font-size: 14px; border-top: 1px solid #eee;">
+        <p style="font-size: 12px;">感谢使用诛仙世界副职业成本计算器</p>
+    </div>
 </body>
 </html>
